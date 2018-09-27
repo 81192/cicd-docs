@@ -90,6 +90,26 @@
 <li class="toctree-l3"><a class="reference internal" href="#ubuntu">Ubuntu</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">命令</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">状态查询</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">查看日志</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">启动服务</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">关闭服务</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">重启服务</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">配置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">修改配置文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">变更主配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">权限管理</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id12">创建用户</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">创建组</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">创建项目</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">授权项目用户</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../jenkins/jenkins.html">jenkins</a></li>
@@ -159,8 +179,48 @@
             
   <div class="section" id="gitlab">
 <h1>gitlab<a class="headerlink" href="#gitlab" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>一个基于 GIT 的源码托管解决方案</li>
+<li>基于 Ruby on rails 开发</li>
+<li>集成了 nginx postgreSQL redis sidekiq 等组件</li>
+</ul>
 <div class="section" id="id1">
 <h2>安装<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>组件</td>
+<td>作用</td>
+</tr>
+<tr class="row-even"><td>nginx</td>
+<td>静态 Web 服务器</td>
+</tr>
+<tr class="row-odd"><td>gitlab-shell</td>
+<td>用于处理 Git 命令和修改 authorized keys 列表</td>
+</tr>
+<tr class="row-even"><td>gitlab-workhorse</td>
+<td>轻量级的反向代理服务器</td>
+</tr>
+<tr class="row-odd"><td>logrotate</td>
+<td>日志文件管理工具</td>
+</tr>
+<tr class="row-even"><td>postgresql</td>
+<td>数据库</td>
+</tr>
+<tr class="row-odd"><td>redis</td>
+<td>缓存数据库</td>
+</tr>
+<tr class="row-even"><td>sidekiq</td>
+<td>用于在后台执行队列任务（异步执行）</td>
+</tr>
+<tr class="row-odd"><td>unicorn</td>
+<td>Gitlab Rails 应用是托管在这个服务器上面的</td>
+</tr>
+</tbody>
+</table>
 <div class="section" id="rhel-centos">
 <h3>RHEL/CentOS<a class="headerlink" href="#rhel-centos" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
@@ -185,12 +245,18 @@ sudo systemctl start postfix
 </li>
 <li><p class="first">添加 GitLab 软件包存储库并安装软件包</p>
 <blockquote>
-<div><p>添加GitLab包存储库</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh <span class="p">|</span> sudo bash
+<div><p>新建 <code class="docutils literal notranslate"><span class="pre">/etc/yum.repos.d/gitlab-ce.repo</span></code> , 内容为：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat &lt;&lt; <span class="s2">&quot;EOF&quot;</span> &gt; /etc/yum.repos.d/gitlab-ce.repo
+<span class="o">[</span>gitlab-ce<span class="o">]</span>
+<span class="nv">name</span><span class="o">=</span>Gitlab CE Repository
+<span class="nv">baseurl</span><span class="o">=</span>https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el<span class="nv">$releasever</span>/
+<span class="nv">gpgcheck</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">enabled</span><span class="o">=</span><span class="m">1</span>
+EOF
 </pre></div>
 </div>
-<p>接下来，安装GitLab包。 将 <code class="docutils literal notranslate"><span class="pre">http：//</span> <span class="pre">gitlab.example.com</span></code> 更改为您要访问GitLab实例的URL。 安装将自动配置并启动该URL的GitLab。 HTTPS在安装后需要其他配置。</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo <span class="nv">EXTERNAL_URL</span><span class="o">=</span><span class="s2">&quot;http://gitlab.example.com&quot;</span> yum install -y gitlab-ce
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo yum makecache
+sudo yum install -y gitlab-ce
 </pre></div>
 </div>
 </div></blockquote>
@@ -220,12 +286,19 @@ sudo apt-get install -y curl openssh-server ca-certificates
 </li>
 <li><p class="first">添加GitLab软件包存储库并安装软件包</p>
 <blockquote>
-<div><p>添加GitLab包存储库</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh <span class="p">|</span> sudo bash
+<div><p>首先信任 GitLab 的 GPG 公钥:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://packages.gitlab.com/gpg.key <span class="m">2</span>&gt; /dev/null <span class="p">|</span> sudo apt-key add - <span class="p">&amp;</span>&gt;/dev/null
 </pre></div>
 </div>
-<p>接下来，安装GitLab包。 将 <code class="docutils literal notranslate"><span class="pre">http：//</span> <span class="pre">gitlab.example.com</span></code> 更改为您要访问GitLab实例的URL。 安装将自动配置并启动该URL的GitLab。 HTTPS在安装后需要其他配置。</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo <span class="nv">EXTERNAL_URL</span><span class="o">=</span><span class="s2">&quot;http://gitlab.example.com&quot;</span> apt-get install gitlab-ee
+<p>再选择你的 Debian/Ubuntu 版本，文本框中内容写进 <code class="docutils literal notranslate"><span class="pre">/etc/apt/sources.list.d/gitlab-ce.list</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo cat <span class="s">&lt;&lt; EOF &gt; /etc/apt/sources.list.d/gitlab-ce.list</span>
+<span class="s">deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+<p>安装 gitlab-ce ：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update
+sudo apt-get install gitlab-ce
 </pre></div>
 </div>
 </div></blockquote>
@@ -233,6 +306,486 @@ sudo apt-get install -y curl openssh-server ca-certificates
 <li><p class="first">浏览主机并登陆</p>
 <blockquote>
 <div><p>首次访问时，您将被重定向到密码重置屏幕。提供初始管理员帐户的密码，您将被重定向回登录屏幕。使用默认帐户的用户名 <code class="docutils literal notranslate"><span class="pre">root</span></code> 登录。</p>
+</div></blockquote>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>命令<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>状态查询<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>通过命令可以查看各服务组件的运行状态</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl status
+run: alertmanager: <span class="o">(</span>pid <span class="m">12966</span><span class="o">)</span> 4279s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12980</span><span class="o">)</span> 4279s
+run: gitaly: <span class="o">(</span>pid <span class="m">12895</span><span class="o">)</span> 4281s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12978</span><span class="o">)</span> 4279s
+run: gitlab-monitor: <span class="o">(</span>pid <span class="m">12928</span><span class="o">)</span> 4280s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12936</span><span class="o">)</span> 4280s
+run: gitlab-workhorse: <span class="o">(</span>pid <span class="m">12877</span><span class="o">)</span> 4281s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12950</span><span class="o">)</span> 4280s
+run: logrotate: <span class="o">(</span>pid <span class="m">20523</span><span class="o">)</span> 726s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12952</span><span class="o">)</span> 4280s
+run: nginx: <span class="o">(</span>pid <span class="m">12398</span><span class="o">)</span> 4332s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12951</span><span class="o">)</span> 4280s
+run: node-exporter: <span class="o">(</span>pid <span class="m">12620</span><span class="o">)</span> 4314s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12924</span><span class="o">)</span> 4280s
+run: postgres-exporter: <span class="o">(</span>pid <span class="m">12987</span><span class="o">)</span> 4279s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">13069</span><span class="o">)</span> 4278s
+run: postgresql: <span class="o">(</span>pid <span class="m">12125</span><span class="o">)</span> 4372s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12864</span><span class="o">)</span> 4281s
+run: prometheus: <span class="o">(</span>pid <span class="m">12943</span><span class="o">)</span> 4280s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12961</span><span class="o">)</span> 4279s
+run: redis: <span class="o">(</span>pid <span class="m">12050</span><span class="o">)</span> 4378s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12863</span><span class="o">)</span> 4281s
+run: redis-exporter: <span class="o">(</span>pid <span class="m">12705</span><span class="o">)</span> 4302s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">13068</span><span class="o">)</span> 4279s
+run: sidekiq: <span class="o">(</span>pid <span class="m">12371</span><span class="o">)</span> 4334s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12931</span><span class="o">)</span> 4280s
+run: unicorn: <span class="o">(</span>pid <span class="m">12328</span><span class="o">)</span> 4340s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12930</span><span class="o">)</span> 4280s
+</pre></div>
+</div>
+<p>也可以指定查看某个服务</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl status nginx
+run: nginx: <span class="o">(</span>pid <span class="m">12398</span><span class="o">)</span> 4463s<span class="p">;</span> run: log: <span class="o">(</span>pid <span class="m">12951</span><span class="o">)</span> 4411s
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>查看日志<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>如果想查看某个服务的日志，可以使用如下命令</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl tail <span class="nv">nginx</span>
+<span class="o">==</span>&gt; /var/log/gitlab/nginx/current &lt;<span class="o">==</span>
+
+<span class="o">==</span>&gt; /var/log/gitlab/nginx/error.log &lt;<span class="o">==</span>
+
+<span class="o">==</span>&gt; /var/log/gitlab/nginx/gitlab_access.log &lt;<span class="o">==</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:37 +0800<span class="o">]</span> <span class="s2">&quot;POST /profile/preferences HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">585</span> <span class="s2">&quot;http://192.168.47.132/profile/preferences&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:42 +0800<span class="o">]</span> <span class="s2">&quot;POST /profile/preferences HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">585</span> <span class="s2">&quot;http://192.168.47.132/profile/preferences&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:43 +0800<span class="o">]</span> <span class="s2">&quot;GET /profile/keys HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">7587</span> <span class="s2">&quot;http://192.168.47.132/profile/preferences&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:43 +0800<span class="o">]</span> <span class="s2">&quot;GET /assets/webpack/pages.profiles.keys.963cb5f3.chunk.js HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">803</span> <span class="s2">&quot;http://192.168.47.132/profile/keys&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:45 +0800<span class="o">]</span> <span class="s2">&quot;GET /profile/chat_names HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">6725</span> <span class="s2">&quot;http://192.168.47.132/profile/keys&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:11:59:47 +0800<span class="o">]</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">7539</span> <span class="s2">&quot;http://192.168.47.132/profile/chat_names&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:12:01:58 +0800<span class="o">]</span> <span class="s2">&quot;GET /projects/new HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">13013</span> <span class="s2">&quot;http://192.168.47.132/&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:12:01:58 +0800<span class="o">]</span> <span class="s2">&quot;GET /assets/webpack/commons~pages.projects~pages.projects.activity~pages.projects.artifacts.browse~pages.projects.artifa~1485fd35.d346ca1a.chunk.js HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">7340</span> <span class="s2">&quot;http://192.168.47.132/projects/new&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:12:01:58 +0800<span class="o">]</span> <span class="s2">&quot;GET /assets/webpack/pages.projects.new.0fa98a30.chunk.js HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">1667</span> <span class="s2">&quot;http://192.168.47.132/projects/new&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+<span class="m">192</span>.168.47.1 - - <span class="o">[</span><span class="m">27</span>/Sep/2018:12:02:11 +0800<span class="o">]</span> <span class="s2">&quot;GET /import/github/new HTTP/1.1&quot;</span> <span class="m">200</span> <span class="m">6206</span> <span class="s2">&quot;http://192.168.47.132/projects/new&quot;</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36&quot;</span>
+
+<span class="o">==</span>&gt; /var/log/gitlab/nginx/gitlab_error.log &lt;<span class="o">==</span>
+
+<span class="o">==</span>&gt; /var/log/gitlab/nginx/access.log &lt;<span class="o">==</span>
+</pre></div>
+</div>
+<p>也可以前往服务组件的日志目录进行查看：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ll /var/log/gitlab/
+total <span class="m">0</span>
+drwx------ <span class="m">2</span> gitlab-prometheus root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 alertmanager
+drwx------ <span class="m">2</span> git               root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 gitaly
+drwx------ <span class="m">2</span> git               root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 gitlab-monitor
+drwx------ <span class="m">2</span> git               root       <span class="m">216</span> Sep <span class="m">27</span> <span class="m">11</span>:00 gitlab-rails
+drwx------ <span class="m">2</span> git               root        <span class="m">30</span> Sep <span class="m">27</span> <span class="m">10</span>:59 gitlab-shell
+drwx------ <span class="m">2</span> git               root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 gitlab-workhorse
+drwx------ <span class="m">2</span> root              root        <span class="m">47</span> Sep <span class="m">27</span> <span class="m">11</span>:00 logrotate
+drwxr-x--- <span class="m">2</span> root              gitlab-www <span class="m">131</span> Sep <span class="m">27</span> <span class="m">11</span>:00 nginx
+drwx------ <span class="m">2</span> gitlab-prometheus root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 node-exporter
+drwx------ <span class="m">2</span> gitlab-psql       root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 postgres-exporter
+drwx------ <span class="m">2</span> gitlab-psql       root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 postgresql
+drwx------ <span class="m">2</span> gitlab-prometheus root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 prometheus
+drwxr-xr-x <span class="m">2</span> root              root        <span class="m">28</span> Sep <span class="m">27</span> <span class="m">10</span>:59 reconfigure
+drwx------ <span class="m">2</span> gitlab-redis      root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 redis
+drwx------ <span class="m">2</span> gitlab-redis      root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 redis-exporter
+drwx------ <span class="m">2</span> git               root        <span class="m">82</span> Sep <span class="m">27</span> <span class="m">11</span>:01 sidekiq
+drwx------ <span class="m">2</span> git               root       <span class="m">134</span> Sep <span class="m">27</span> <span class="m">11</span>:01 unicorn
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h3>启动服务<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>可以启动指定的服务，也可以启动全部服务</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl start
+gitlab-ctl start nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>关闭服务<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>可以关闭指定的服务，也可以关闭全部服务</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl stop
+gitlab-ctl stop nginx
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>重启服务<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>可以重启指定的服务，也可以重启全部服务</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitlab-ctl restart
+gitlab-ctl restart nginx
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>配置<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>安装完成后需要进行的配置，配置文件如下表所示：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>路径</td>
+<td>内容</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">/var/opt/gitlab/git-data/repostitories/root</span></code></td>
+<td>库默认存储目录</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">/opt/gitlab</span></code></td>
+<td>应用代码和相应的依赖程序</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">/var/opt/gitlab</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">gitlab</span> <span class="pre">reconfigure</span></code> 命令编译后的应用数据和配置文件，不需要人为修改配置</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">/etc/gitlab</span></code></td>
+<td>配置文件目录</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">/var/log/gitlab</span></code></td>
+<td>此目录下存放了 gitlab 各个组件产生的日志</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">/var/opt/gitlab/backups/</span></code></td>
+<td>备份文件生成的目录</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id9">
+<h3>修改配置文件<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>因为 gitlab 是使用 ruby 编写的，所以它的配置文件后缀名是 rb。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim /etc/gitlab/gitlab.rb
+external_url <span class="s1">&#39;your_ip_address_or_domain_name&#39;</span>
+</pre></div>
+</div>
+<p>修改完成之后，需要重新加载配置文件，执行如下命令：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo gitlab-ctl reconfigure
+</pre></div>
+</div>
+<p>执行完成后，通过浏览器访问IP地址或域名，因为首次访问，Gitlab 需要你为 <code class="docutils literal notranslate"><span class="pre">root</span></code> 设置一个新的密码。</p>
+<img alt="../_images/设置密码.png" src="../_images/设置密码.png" />
+<p>注册完成之后，就会跳转到访问页面，此时你可以使用 <code class="docutils literal notranslate"><span class="pre">root</span></code> 用户访问，但是建议额外注册一个管理员用户来管理 Gitlab 服务。</p>
+<img alt="../_images/注册新用户.png" src="../_images/注册新用户.png" />
+</div>
+<div class="section" id="id10">
+<h3>变更主配置文件<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>每当我们要变更配置文件，需要执行以下步骤</p>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">gitlab-ctl</span> <span class="pre">reconfigure</span></code> 重置配置文件</li>
+<li><code class="docutils literal notranslate"><span class="pre">gitlab-ctl</span> <span class="pre">show-config</span></code> 验证配置文件</li>
+<li><code class="docutils literal notranslate"><span class="pre">gitlab-ctl</span> <span class="pre">restart</span></code>  重启配置文件</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>权限管理<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">root</span></code> 用户进入 Gitlab 服务首页，如下所示</p>
+<img alt="../_images/gitlab首页.png" src="../_images/gitlab首页.png" />
+<p>点击导航栏中的 <code class="docutils literal notranslate"><span class="pre">admin</span> <span class="pre">area</span></code> 小扳手进入管理界面</p>
+<img alt="../_images/管理界面.png" src="../_images/管理界面.png" />
+<div class="section" id="id12">
+<h3>创建用户<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">User</span></code> 按钮，创建新的用户。</p>
+<blockquote>
+<div><img alt="../_images/新建组按钮.png" src="../_images/新建组按钮.png" />
+</div></blockquote>
+</li>
+<li><p class="first">进入新建用户配置页面</p>
+<blockquote>
+<div><img alt="../_images/新建用户配置页面.png" src="../_images/新建用户配置页面.png" />
+</div></blockquote>
+</li>
+<li><p class="first">配置选项</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="18%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">内容</th>
+<th class="head">选项</th>
+<th class="head">含义与作用</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td rowspan="3">Account</td>
+<td>Name</td>
+<td>账户名称</td>
+</tr>
+<tr class="row-odd"><td>Username</td>
+<td>用户名</td>
+</tr>
+<tr class="row-even"><td>Email</td>
+<td>邮箱地址</td>
+</tr>
+<tr class="row-odd"><td rowspan="2">Password</td>
+<td>Password</td>
+<td>密码</td>
+</tr>
+<tr class="row-even"><td>Password confirmation</td>
+<td>确认密码</td>
+</tr>
+<tr class="row-odd"><td rowspan="5">Access</td>
+<td>Projects limit</td>
+<td>项目限制</td>
+</tr>
+<tr class="row-even"><td>Can create group</td>
+<td>是否能创建组</td>
+</tr>
+<tr class="row-odd"><td>Access level</td>
+<td>Regular (普通用户)</td>
+</tr>
+<tr class="row-even"><td>Access level</td>
+<td>Admin（管理员）</td>
+</tr>
+<tr class="row-odd"><td>External</td>
+<td>除非明确授予访问权限，否则外部用户无法查看内部或私有项目。此外，外部用户无法创建项目或组。</td>
+</tr>
+<tr class="row-even"><td rowspan="5">Profile</td>
+<td>Acatar</td>
+<td>头像</td>
+</tr>
+<tr class="row-odd"><td>Skype</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Linkedin</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Twitter</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Website</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="id13">
+<h3>创建组<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>为什么需要有组？比如公司现在有开发团队，有不同项目，可以按照不同项目来分配组，组内包含了不同的成员。</p>
+<ol class="arabic">
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">Group</span></code> 按钮，创建新的用户组。</p>
+<blockquote>
+<div><img alt="../_images/新建组按钮.png" src="../_images/新建组按钮.png" />
+</div></blockquote>
+</li>
+<li><p class="first">进入新建组配置页面</p>
+<blockquote>
+<div><img alt="../_images/组配置信息.png" src="../_images/组配置信息.png" />
+</div></blockquote>
+</li>
+<li><p class="first">配置选项</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">选项</th>
+<th class="head">含义与作用</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Group path</td>
+<td>组项目 URL 路径</td>
+</tr>
+<tr class="row-odd"><td>Group name</td>
+<td>组项目名称</td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>组项目描述</td>
+</tr>
+<tr class="row-odd"><td>Group avatar</td>
+<td>组项目图标</td>
+</tr>
+<tr class="row-even"><td rowspan="4">Visibility Level</td>
+<td>Private（该组及其项目只能由成员查看）</td>
+</tr>
+<tr class="row-odd"><td>Internal（任何登录用户都可以查看该组和任何内部项目）</td>
+</tr>
+<tr class="row-even"><td>Public（无需任何身份验证即可查看该组和任何公共项目）</td>
+</tr>
+<tr class="row-odd"><td>Allow users to request access（如果公开或内部可见性，则允许用户请求访问权限）</td>
+</tr>
+<tr class="row-even"><td>Large File Storage</td>
+<td>允许该组中的项目使用Git LFS</td>
+</tr>
+<tr class="row-odd"><td>Two-factor authentication</td>
+<td>要求此组中的所有用户都设置双因素身份验证</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+<li><p class="first">组创建成功</p>
+<blockquote>
+<div><img alt="../_images/组详细页面.png" src="../_images/组详细页面.png" />
+</div></blockquote>
+</li>
+<li><p class="first">组授权</p>
+<blockquote>
+<div><p>组创建完成后，组内是没有用户的，创建组的用户就要赋权给其他的用户</p>
+<ul>
+<li><p class="first">选择用户加入组</p>
+<blockquote>
+<div><img alt="../_images/选择用户加入组.png" src="../_images/选择用户加入组.png" />
+</div></blockquote>
+</li>
+<li><p class="first">设置用户在组中的角色</p>
+<blockquote>
+<div><img alt="../_images/设置用户角色.png" src="../_images/设置用户角色.png" />
+</div></blockquote>
+</li>
+<li><p class="first">查看组成员</p>
+<blockquote>
+<div><img alt="../_images/查看组成员.png" src="../_images/查看组成员.png" />
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="id14">
+<h3>创建项目<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">project</span></code> 按钮，创建新的项目。</p>
+<blockquote>
+<div><img alt="../_images/新建项目按钮.png" src="../_images/新建项目按钮.png" />
+</div></blockquote>
+</li>
+<li><p class="first">进入新建项目配置页面</p>
+<blockquote>
+<div><img alt="../_images/新建项目.png" src="../_images/新建项目.png" />
+</div></blockquote>
+</li>
+<li><p class="first">选项配置</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="58%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">选项</th>
+<th class="head">含义与作用</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Project name</td>
+<td>项目名称</td>
+</tr>
+<tr class="row-odd"><td>Project URL</td>
+<td>项目URL</td>
+</tr>
+<tr class="row-even"><td>Project slug</td>
+<td>项目块</td>
+</tr>
+<tr class="row-odd"><td>Project description</td>
+<td>项目描述</td>
+</tr>
+<tr class="row-even"><td rowspan="3">Visibility Level</td>
+<td>Private（私有）</td>
+</tr>
+<tr class="row-odd"><td>Internal（内部）</td>
+</tr>
+<tr class="row-even"><td>Public（公有）</td>
+</tr>
+<tr class="row-odd"><td>Initialize repository with a README、</td>
+<td>初始化存储库的 README 文件</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="id15">
+<h3>授权项目用户<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">给用户添加密钥</p>
+<blockquote>
+<div><p>当我们创建完成了组、用户与项目之后，用户需要上传公钥，否则 SSH 协议不能使用。</p>
+<ul>
+<li><p class="first">点击页面右上方的用户头像</p>
+<blockquote>
+<div><img alt="../_images/用户设置.png" src="../_images/用户设置.png" />
+</div></blockquote>
+</li>
+<li><p class="first">进入用户配置页面，查看左侧用户配置选项</p>
+<blockquote>
+<div><img alt="../_images/用户配置选项.png" src="../_images/用户配置选项.png" />
+</div></blockquote>
+</li>
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">SSH</span> <span class="pre">keys</span></code> ，为用户添加 SSH 公钥</p>
+<blockquote>
+<div><img alt="../_images/SSH公钥配置.png" src="../_images/SSH公钥配置.png" />
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">本地生成密钥对</p>
+<blockquote>
+<div><ul>
+<li><p class="first">用户本地主机生成密钥对</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ssh-keygen -b 4096 -t rsa -f ~/.ssh/gitlab -N &#39;&#39;
+Generating public/private rsa key pair.
+Your identification has been saved in /Users/renkeju/.ssh/gitlab.
+Your public key has been saved in /Users/renkeju/.ssh/gitlab.pub.
+The key fingerprint is:
+SHA256:s427VY2KNaGXemMwu3ird02IK4/lo7OHCA7vLHfcAmI renkeju@laptop.local
+The key&#39;s randomart image is:
++---[RSA 4096]----+
+|                 |
+|                 |
+|          .      |
+|         . o o   |
+|        S.=.o .  |
+|oEo     .&amp;.+.    |
+|.= + o .B.Bo     |
+|..+ = ==**...    |
+| +o. .*@B=       |
++----[SHA256]-----+
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">查看密钥对</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ll .ssh/gitlab*
+-rw-------  1 renkeju  staff   3.2K  9 27 15:46 .ssh/gitlab
+-rw-r--r--  1 renkeju  staff   746B  9 27 15:46 .ssh/gitlab.pub
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">复制公钥</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cat .ssh/gitlab.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIAmL6Hgb1hyi8ErvF2kd0o4lYVwn8EecdyMBrSViOjj0FxFz5NBXVZgZziuKiYN9EBQt+cf+ehbUquLJY/w5S3Rg08x8QMKnJCtQ0vK8vmuO6ljUxHlBzyQiSs4dQWIwhAUL5hJ+BrAHp+PbPvuX7nwZILPCGLZTlMIBTWIQtUwdZQDQmWZ0xxsXlHoa0w4NNgUcJOgrFF2A0E4jrzAOdUKWQfhCSBXEd6BZJ+QGOcRmIL3fPasJL3+B8X5GNs56DpXeByXLGSwgU605bog9oU6N3WqHvoLa1LwwUmpfospEB1DimS/7a31nMPera026Hvr851QUUAxZGjpYxZodJ1QcscH4ZOgafFZnH+8UiU6LWreb4cj/o56i+TuKntOAlQNb6R0M9C4E3B5BQI8l6Ob5nkr7ltujDTJGtTFPlF0oBxEqgkpnvjkLicZ6biCDa3f2bEU7k5Ez/kyrA1w639gnfF58KzyZuuhM9HG1ANK4KO9LGr/5MMqjbkr8ksiqcNG17YSmdQVWqmLU5Ai2tEnA5KLjHwiv2MXrzpBe1elIUXW7AHps+Tx+e/Q56K3vfJ43adxh+E+cFDqPyjpsBWdc6m7Js7hXuQ2Z5iFSVfyh9YxwmJudHLTkhTZhJi18qjnPyNy9Q/WwKVRq0NWXfqcd3aWjvmNXLe7HAXfhi7Q== renkeju@laptop.local
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">配置公钥</p>
+<blockquote>
+<div><ul>
+<li><p class="first">将公钥黏贴到文本框内</p>
+<blockquote>
+<div><img alt="../_images/将公钥黏贴到文本框内.png" src="../_images/将公钥黏贴到文本框内.png" />
+</div></blockquote>
+</li>
+<li><p class="first">已添加的公钥列表</p>
+<blockquote>
+<div><img alt="../_images/已添加公钥列表.png" src="../_images/已添加公钥列表.png" />
+</div></blockquote>
+</li>
+</ul>
 </div></blockquote>
 </li>
 </ol>

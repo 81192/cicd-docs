@@ -1,6 +1,26 @@
 安装
 +++++++
 
++------------------+----------------------------------------------+
+|       组件       |                     作用                     |
++------------------+----------------------------------------------+
+|      nginx       |               静态 Web 服务器                |
++------------------+----------------------------------------------+
+|   gitlab-shell   | 用于处理 Git 命令和修改 authorized keys 列表 |
++------------------+----------------------------------------------+
+| gitlab-workhorse |            轻量级的反向代理服务器            |
++------------------+----------------------------------------------+
+|    logrotate     |               日志文件管理工具               |
++------------------+----------------------------------------------+
+|    postgresql    |                    数据库                    |
++------------------+----------------------------------------------+
+|      redis       |                  缓存数据库                  |
++------------------+----------------------------------------------+
+|     sidekiq      |      用于在后台执行队列任务（异步执行）      |
++------------------+----------------------------------------------+
+|     unicorn      |  Gitlab Rails 应用是托管在这个服务器上面的   |
++------------------+----------------------------------------------+
+
 RHEL/CentOS
 """""""""""""""
 
@@ -27,17 +47,22 @@ RHEL/CentOS
 
 2. 添加 GitLab 软件包存储库并安装软件包
 
-    添加GitLab包存储库
+    新建 ``/etc/yum.repos.d/gitlab-ce.repo`` , 内容为：
 
     .. code-block:: bash
 
-        curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
-
-    接下来，安装GitLab包。 将 ``http：// gitlab.example.com`` 更改为您要访问GitLab实例的URL。 安装将自动配置并启动该URL的GitLab。 HTTPS在安装后需要其他配置。
+        cat << "EOF" > /etc/yum.repos.d/gitlab-ce.repo 
+        [gitlab-ce]
+        name=Gitlab CE Repository
+        baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el$releasever/
+        gpgcheck=0
+        enabled=1
+        EOF
 
     .. code-block:: bash
 
-        sudo EXTERNAL_URL="http://gitlab.example.com" yum install -y gitlab-ce
+        sudo yum makecache
+        sudo yum install -y gitlab-ce
 
 3. 浏览主机并登陆
 
@@ -63,17 +88,26 @@ Ubuntu
 
 2. 添加GitLab软件包存储库并安装软件包
 
-    添加GitLab包存储库
+    首先信任 GitLab 的 GPG 公钥:
 
     .. code-block:: bash
 
-        curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+        curl https://packages.gitlab.com/gpg.key 2> /dev/null | sudo apt-key add - &>/dev/null
 
-    接下来，安装GitLab包。 将 ``http：// gitlab.example.com`` 更改为您要访问GitLab实例的URL。 安装将自动配置并启动该URL的GitLab。 HTTPS在安装后需要其他配置。
+    再选择你的 Debian/Ubuntu 版本，文本框中内容写进 ``/etc/apt/sources.list.d/gitlab-ce.list``
 
     .. code-block:: bash
 
-        sudo EXTERNAL_URL="http://gitlab.example.com" apt-get install gitlab-ee
+        sudo cat << EOF > /etc/apt/sources.list.d/gitlab-ce.list
+        deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/ubuntu xenial main
+        EOF
+
+    安装 gitlab-ce ：
+
+    .. code-block:: bash
+
+        sudo apt-get update
+        sudo apt-get install gitlab-ce
 
 3. 浏览主机并登陆
 
