@@ -9,3 +9,6 @@ gitlab
 .. include:: /gitlab/command.rst
 .. include:: /gitlab/config.rst
 .. include:: /gitlab/permission.rst
+.. include:: /gitlab/issues.rst
+.. include:: /gitlab/backup.rst
+.. include:: /gitlab/mail.rst
