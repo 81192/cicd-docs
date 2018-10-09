@@ -236,3 +236,26 @@ nginx 反向代理 Jenkins
         1. 重启nginx或重新加载nginx配置之前，需要创建 ``/var/log/nginx/jenkins`` 目录，否则nginx启动失败并报错。
         2. 配置完成后，访问 web 页面，还是会报出“反向代理设置有误”，这是因为之前我们通过 8080 端口访问 Jenkins，当使用 Nginx 进行反向代理后，在【系统管理】--> 【系统设置】的 jenkins URL 配置中还是 8080 端口，我们需要更改为 nginx 所指定的端口号。 
 
+主题设置
+'''''''''''''
+
+Jenkins 自带的样式比较丑，我们也有很多第三方样式库可以选择，这里我们介绍 `jenkins-material-theme <http://afonsof.com/jenkins-material-theme/>`_ 。
+
+1. 选择主题颜色
+
+    .. image:: /images/jenkins/jenkins主题颜色.png
+
+2. 将 URL 中的 ``{{your-color-name}}``更换为你选择的颜色：``https://cdn.rawgit.com/afonsof/jenkins-material-theme/gh-pages/dist/material-{{your-color-name}}.css``
+
+3. 安装 ` Jenkins Simple Theme 插件 <https://wiki.jenkins-ci.org/display/JENKINS/Simple+Theme+Plugin>`_
+
+4. 点击 ``Manager Jenkins``
+
+5. 点击 ``Configure System`` 并找到 ``Theme``
+
+6. 使用第三方的CSS样式有两种方式
+
+    * 添加 ``CSS URL`` ，将字段设置为生成的 CSS URL
+    * 下载 URL 的 CSS 样式文件，将文件内容黏贴入 ``Extra CSS``
+
+7. 点击 ``Save``

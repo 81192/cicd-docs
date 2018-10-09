@@ -110,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#id15">系统设置</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id16">工作目录设置</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nginx-jenkins">nginx 反向代理 Jenkins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17">主题设置</a></li>
 </ul>
 </li>
 </ul>
@@ -715,6 +716,35 @@ server {
 </div></blockquote>
 </li>
 </ul>
+</div>
+<div class="section" id="id17">
+<h4>主题设置<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h4>
+<p>Jenkins 自带的样式比较丑，我们也有很多第三方样式库可以选择，这里我们介绍 <a class="reference external" href="http://afonsof.com/jenkins-material-theme/">jenkins-material-theme</a> 。</p>
+<ol class="arabic">
+<li><p class="first">选择主题颜色</p>
+<blockquote>
+<div><img alt="../_images/jenkins主题颜色.png" src="../_images/jenkins主题颜色.png" />
+</div></blockquote>
+</li>
+<li><p class="first">将 URL 中的 <code class="docutils literal notranslate"><span class="pre">{{your-color-name}}``更换为你选择的颜色：``https://cdn.rawgit.com/afonsof/jenkins-material-theme/gh-pages/dist/material-{{your-color-name}}.css</span></code></p>
+</li>
+<li><p class="first">安装 ` Jenkins Simple Theme 插件 &lt;<a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Simple+Theme+Plugin">https://wiki.jenkins-ci.org/display/JENKINS/Simple+Theme+Plugin</a>&gt;`_</p>
+</li>
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">Manager</span> <span class="pre">Jenkins</span></code></p>
+</li>
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">Configure</span> <span class="pre">System</span></code> 并找到 <code class="docutils literal notranslate"><span class="pre">Theme</span></code></p>
+</li>
+<li><p class="first">使用第三方的CSS样式有两种方式</p>
+<blockquote>
+<div><ul class="simple">
+<li>添加 <code class="docutils literal notranslate"><span class="pre">CSS</span> <span class="pre">URL</span></code> ，将字段设置为生成的 CSS URL</li>
+<li>下载 URL 的 CSS 样式文件，将文件内容黏贴入 <code class="docutils literal notranslate"><span class="pre">Extra</span> <span class="pre">CSS</span></code></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">点击 <code class="docutils literal notranslate"><span class="pre">Save</span></code></p>
+</li>
+</ol>
 </div>
 </div>
 </div>
