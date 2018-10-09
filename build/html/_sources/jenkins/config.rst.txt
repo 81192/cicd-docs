@@ -8,7 +8,7 @@
 镜像管理
 """""""""""""""
 
-Jenkins 官方提供了一个`镜像列表 <http://mirrors.jenkins-ci.org/status.html>`_，会列出最快的镜像。
+Jenkins 官方提供了一个 `镜像列表 <http://mirrors.jenkins-ci.org/status.html>`_ ，会列出最快的镜像。
 
 进入 Jenkins 页面，点击 Manager Jenkisn --> Manager Plugins --> Advanced 
 
@@ -172,3 +172,67 @@ Jenkins 会基于一些后处理器任务为构建发布一个稳健指数（从
 * Jenkins Location
 * 邮件通知
 * Configure Global Security
+
+nginx 反向代理 Jenkins
+'''''''''''''''''''''''''''''
+
+* nginx 反向代理 jenkins 配置
+
+    .. code-block:: none
+
+        upstream jenkins_server {
+            server 127.0.0.1:8080 fail_timeout=0;
+        }
+
+        server {
+            listen 80;
+            server_name jenkins.example.com;
+
+            access_log      /var/log/nginx/jenkins/access.log;
+            error_log       /var/log/nginx/jenkins/error.log;
+
+            location / {
+                proxy_set_header        Host $host:$server_port;
+                proxy_set_header        X-Real-IP $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header        X-Forwarded-Proto $scheme;
+                proxy_pass              http://jenkins_server;
+            }
+        }
+
+* nginx 反向代理 jenkins ssl 配置 
+
+    .. code-block:: none
+
+        upstream app_server {
+            server 127.0.0.1:8080 fail_timeout=0;
+        }
+
+        server {
+            listen 80;
+            server_name jenkins.example.com;
+            return 301 https://$host/$request_uri;
+        }
+
+        server {
+            listen 443 ssl;
+            server_name jenkins.example.com;
+
+            access_log      /var/log/nginx/jenkins/access.log;
+            error_log       /var/log/nginx/jenkins/error.log;
+
+            location / {
+                proxy_set_header        Host $host:$server_port;
+                proxy_set_header        X-Real-IP $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header        X-Forwarded-Proto $scheme;
+                proxy_redirect http:// https://;
+                proxy_pass              http://app_server;
+            }
+        }
+
+    .. attention:: 
+
+        1. 重启nginx或重新加载nginx配置之前，需要创建 ``/var/log/nginx/jenkins`` 目录，否则nginx启动失败并报错。
+        2. 配置完成后，访问 web 页面，还是会报出“反向代理设置有误”，这是因为之前我们通过 8080 端口访问 Jenkins，当使用 Nginx 进行反向代理后，在【系统管理】--> 【系统设置】的 jenkins URL 配置中还是 8080 端口，我们需要更改为 nginx 所指定的端口号。 
+

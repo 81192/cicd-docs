@@ -103,12 +103,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id8">基础配置</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id9">镜像管理</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id10">Jenkins 目录</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id11">卡启动问题</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id12">备份</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id13">构建状态</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id14">系统设置</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id15">工作目录设置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Jenkins 目录</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">卡启动问题</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">备份</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">构建状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">系统设置</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id16">工作目录设置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nginx-jenkins">nginx 反向代理 Jenkins</a></li>
 </ul>
 </li>
 </ul>
@@ -467,15 +468,15 @@ sudo yum install jenkins
 </ul>
 <div class="section" id="id9">
 <h3>镜像管理<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
-<p>Jenkins 官方提供了一个`镜像列表 &lt;<a class="reference external" href="http://mirrors.jenkins-ci.org/status.html">http://mirrors.jenkins-ci.org/status.html</a>&gt;`_，会列出最快的镜像。</p>
+<p>Jenkins 官方提供了一个 <a class="reference external" href="http://mirrors.jenkins-ci.org/status.html">镜像列表</a> ，会列出最快的镜像。</p>
 <p>进入 Jenkins 页面，点击 Manager Jenkisn –&gt; Manager Plugins –&gt; Advanced</p>
 <p>将 <code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">site</span></code> 更换为</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/current/update-center.json
 </pre></div>
 </div>
 </div>
-<div class="section" id="id10">
-<h3>Jenkins 目录<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Jenkins 目录<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
 <col width="76%" />
@@ -506,13 +507,13 @@ sudo yum install jenkins
 </tbody>
 </table>
 </div>
-<div class="section" id="id11">
-<h3>卡启动问题<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>卡启动问题<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p>Jenkins 在第一次启动的时候会向官网回传信息，如果网络在线，但是 Jenkins 不能访问 <a class="reference external" href="https://jenkins-ci.io">https://jenkins-ci.io</a>
 这时关闭网络，离线就能正常安装</p>
 </div>
-<div class="section" id="id12">
-<h3>备份<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>备份<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar zcvf jenkins.tar.gz /var/lib/jenkins
 </pre></div>
 </div>
@@ -587,8 +588,8 @@ sudo yum install jenkins
 </pre></div>
 </div>
 </div>
-<div class="section" id="id13">
-<h3>构建状态<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>构建状态<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>Jenkins 会基于一些后处理器任务为构建发布一个稳健指数（从 0 ~ 100），这些任务一般以插件的方式实现。</p>
 <p>他们可能包括单元测试（JUnit）、覆盖率（Cobertura）和静态代码分析（FindBugs）。</p>
 <p>分数越高，表明构建越稳定。下图中分级符号概述了稳定性的评分范围。任何构建作业的状态（总分100）低于80分就是不稳定的。</p>
@@ -621,10 +622,10 @@ sudo yum install jenkins
 <img alt="../_images/构建稳定性.png" src="../_images/构建稳定性.png" />
 <p>图例可以在 <a class="reference external" href="https://jenkins.renkeju.com:8080/legend">https://jenkins.renkeju.com:8080/legend</a> 中查看</p>
 </div>
-<div class="section" id="id14">
-<h3>系统设置<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id15">
-<h4>工作目录设置<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<h3>系统设置<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h4>工作目录设置<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
 <p>在 Linux 环境中，Jenkins 的默认工作目录在 <code class="docutils literal notranslate"><span class="pre">/var/lib/jenkins/</span></code>，但是我们有些需要特殊指定工作目录的项目，需要默认的 JENKINS_HOME 分开。</p>
 <ol class="arabic">
 <li><p class="first">进入一个项目，在【Genaral】里点击“高级”按钮</p>
@@ -644,6 +645,75 @@ sudo yum install jenkins
 <li>Jenkins Location</li>
 <li>邮件通知</li>
 <li>Configure Global Security</li>
+</ul>
+</div>
+<div class="section" id="nginx-jenkins">
+<h4>nginx 反向代理 Jenkins<a class="headerlink" href="#nginx-jenkins" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">nginx 反向代理 jenkins 配置</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>upstream jenkins_server {
+    server 127.0.0.1:8080 fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name jenkins.example.com;
+
+    access_log      /var/log/nginx/jenkins/access.log;
+    error_log       /var/log/nginx/jenkins/error.log;
+
+    location / {
+        proxy_set_header        Host $host:$server_port;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_pass              http://jenkins_server;
+    }
+}
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">nginx 反向代理 jenkins ssl 配置</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>upstream app_server {
+    server 127.0.0.1:8080 fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name jenkins.example.com;
+    return 301 https://$host/$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name jenkins.example.com;
+
+    access_log      /var/log/nginx/jenkins/access.log;
+    error_log       /var/log/nginx/jenkins/error.log;
+
+    location / {
+        proxy_set_header        Host $host:$server_port;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_redirect http:// https://;
+        proxy_pass              http://app_server;
+    }
+}
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<ol class="last arabic simple">
+<li>重启nginx或重新加载nginx配置之前，需要创建 <code class="docutils literal notranslate"><span class="pre">/var/log/nginx/jenkins</span></code> 目录，否则nginx启动失败并报错。</li>
+<li>配置完成后，访问 web 页面，还是会报出“反向代理设置有误”，这是因为之前我们通过 8080 端口访问 Jenkins，当使用 Nginx 进行反向代理后，在【系统管理】–&gt; 【系统设置】的 jenkins URL 配置中还是 8080 端口，我们需要更改为 nginx 所指定的端口号。</li>
+</ol>
+</div>
+</div></blockquote>
+</li>
 </ul>
 </div>
 </div>
