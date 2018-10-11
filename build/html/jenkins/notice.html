@@ -297,6 +297,48 @@ wget https://raw.githubusercontent.com/jenkinsci/email-ext-plugin/master/src/mai
 <p>之后在 【系统管理】中选择【系统设置】，下拉到 Extended E-mail Notification，在 Default Content 框内输入 <code class="docutils literal notranslate"><span class="pre">${SCRIPT,</span> <span class="pre">template=&quot;groovy-html.template&quot;}</span></code>。</p>
 <p>当项目执行结束后，你就可以收到如下这样的邮件：</p>
 </div>
+<div class="section" id="rss">
+<h2>RSS 订阅<a class="headerlink" href="#rss" title="Permalink to this headline">¶</a></h2>
+<p>Jenkins 的主要功能之一，Jenkins 集成了 RSS 的通知机制
+对于 Jenkins 的 RSS 构建通知，有 Job 级别的 RSS 构建通知和 View 级别的 RSS 构架通知：</p>
+<ol class="arabic simple">
+<li>可以订阅某个 Job 的构建情况</li>
+<li>也可以额订阅一组 Job（比如一个 View 下的所有 Job）的构建情况</li>
+</ol>
+<div class="section" id="job-rss">
+<h3>Job 级别的 RSS 构建通知<a class="headerlink" href="#job-rss" title="Permalink to this headline">¶</a></h3>
+<p>对于每个 Job，在它的 Build History（构建历史）下侧，有两个 RSS 链接：RSS for all、RSS for failures</p>
+<p>其中，每个RSS链接的路径如下：</p>
+<ul class="simple">
+<li>RSS 全部的链接路径为：&lt;JENKINS_URL&gt;/job/&lt;JOB_NAME/rssaAll</li>
+<li>RSS 失败的链接路径为：&lt;JENKINS_URL&gt;/job/&lt;JOB_NAME&gt;/rssFailed</li>
+</ul>
+</div>
+<div class="section" id="view-rss">
+<h3>View 级别的 RSS 构建通知<a class="headerlink" href="#view-rss" title="Permalink to this headline">¶</a></h3>
+<p>对于每个 View，在 View 的右下方，有三个 RSS 链接： RSS for all、RSS for failures、RSS for just latest builds</p>
+<img alt="../_images/JOBVIEW.png" src="../_images/JOBVIEW.png" />
+<p>其中，每个 RSS 链接路径如下：</p>
+<ul class="simple">
+<li>RSS 全部的链接路径为：&lt;JENKINS_URL&gt;/view/&lt;VIEW_NAME&gt;/rssaAll</li>
+<li>RSS 失败的链接路径为：&lt;JENKINS_URL&gt;/view/&lt;VIEW_NAME&gt;/rssFailed</li>
+<li>RSS 最新的构建的链接路径为：&lt;JENKINS_URL&gt;/view/&lt;VIEW_NAME&gt;/rssLatest</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>浏览器订阅实施构建通知<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>Firefox 浏览器，有 RSS 收阅功能，称为实时书签，无需安装任何插件。</p>
+<p>下面使用 Firefox 的实时书签进行 RSS 订阅 Jenkins 某个 Job 的情况为例：</p>
+<p>点击 Jenkins 某个 Job 下 RSS 全部链接，会跳转到 &lt;JENKINS_URL&gt;/job/&lt;JOB_NAME&gt;/rssAll 页面</p>
+<img alt="../_images/RSS订阅步骤一.png" src="../_images/RSS订阅步骤一.png" />
+<img alt="../_images/RSS订阅步骤二.png" src="../_images/RSS订阅步骤二.png" />
+<img alt="../_images/RSS订阅步骤三.png" src="../_images/RSS订阅步骤三.png" />
+<p>默认订阅方式为实时标签，点击立即订阅即可，弹出如下对话框，设置名称及选择文件夹，点订阅后，在书签工具栏便会显示实时书签</p>
+<img alt="../_images/RSS订阅步骤四.png" src="../_images/RSS订阅步骤四.png" />
+<img alt="../_images/RSS订阅步骤五.png" src="../_images/RSS订阅步骤五.png" />
+<p>点击相应的链接便可访问，其中灰色图标表示已阅读状态，橙色图标表示等待阅读状态。</p>
+</div>
+</div>
 </div>
 
 

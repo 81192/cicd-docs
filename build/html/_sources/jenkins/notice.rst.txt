@@ -152,3 +152,56 @@ Email-ext 插件允许你定一个更精致的电子通知策略。这个插件�
 
 .. include:: /images/jenkins/groovy邮件模版.png
 
+RSS 订阅
+""""""""""""""
+
+Jenkins 的主要功能之一，Jenkins 集成了 RSS 的通知机制
+对于 Jenkins 的 RSS 构建通知，有 Job 级别的 RSS 构建通知和 View 级别的 RSS 构架通知：
+
+1. 可以订阅某个 Job 的构建情况
+2. 也可以额订阅一组 Job（比如一个 View 下的所有 Job）的构建情况
+
+Job 级别的 RSS 构建通知
+'''''''''''''''''''''''''''
+
+对于每个 Job，在它的 Build History（构建历史）下侧，有两个 RSS 链接：RSS for all、RSS for failures
+
+.. include:: /images/jenkins/JOBRSS.png
+
+其中，每个RSS链接的路径如下：
+
+* RSS 全部的链接路径为：<JENKINS_URL>/job/<JOB_NAME/rssaAll
+* RSS 失败的链接路径为：<JENKINS_URL>/job/<JOB_NAME>/rssFailed
+
+View 级别的 RSS 构建通知
+''''''''''''''''''''''''''''
+
+对于每个 View，在 View 的右下方，有三个 RSS 链接： RSS for all、RSS for failures、RSS for just latest builds
+
+.. image:: /images/jenkins/JOBVIEW.png
+
+其中，每个 RSS 链接路径如下：
+
+* RSS 全部的链接路径为：<JENKINS_URL>/view/<VIEW_NAME>/rssaAll
+* RSS 失败的链接路径为：<JENKINS_URL>/view/<VIEW_NAME>/rssFailed
+* RSS 最新的构建的链接路径为：<JENKINS_URL>/view/<VIEW_NAME>/rssLatest
+
+浏览器订阅实施构建通知
+''''''''''''''''''''''''
+
+Firefox 浏览器，有 RSS 收阅功能，称为实时书签，无需安装任何插件。
+
+下面使用 Firefox 的实时书签进行 RSS 订阅 Jenkins 某个 Job 的情况为例：
+
+点击 Jenkins 某个 Job 下 RSS 全部链接，会跳转到 <JENKINS_URL>/job/<JOB_NAME>/rssAll 页面
+
+.. image:: /images/jenkins/RSS订阅步骤一.png
+.. image:: /images/jenkins/RSS订阅步骤二.png
+.. image:: /images/jenkins/RSS订阅步骤三.png
+
+默认订阅方式为实时标签，点击立即订阅即可，弹出如下对话框，设置名称及选择文件夹，点订阅后，在书签工具栏便会显示实时书签
+
+.. image:: /images/jenkins/RSS订阅步骤四.png
+.. image:: /images/jenkins/RSS订阅步骤五.png
+
+点击相应的链接便可访问，其中灰色图标表示已阅读状态，橙色图标表示等待阅读状态。
