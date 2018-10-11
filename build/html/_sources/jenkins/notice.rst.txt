@@ -130,3 +130,25 @@ Email-ext 插件允许你定一个更精致的电子通知策略。这个插件�
 8. Triggers
 
     假设最后一个不修改的话，邮件是接收不到的，这是官方留下的一个大坑，一定要自己再添加一个 Recipient List
+
+邮件模版编写
+""""""""""""""""
+
+官方给出的 `groovy 模版 <https://raw.githubusercontent.com/jenkinsci/email-ext-plugin/master/src/main/resources/hudson/plugins/emailext/templates/groovy-html.template>`_
+
+在 ``email-templates`` 文件夹中创建一个文件
+
+.. code-block:: none
+
+    mkdir -p /var/lib/jenkins/email-templates
+    cd /var/lib/jenkins/email-templates
+    wget https://raw.githubusercontent.com/jenkinsci/email-ext-plugin/master/src/main/resources/hudson/plugins/emailext/templates/groovy-html.template
+
+之后你可以根据自己的需要进行定制修改。
+
+之后在 【系统管理】中选择【系统设置】，下拉到 Extended E-mail Notification，在 Default Content 框内输入 ``${SCRIPT, template="groovy-html.template"}``。
+
+当项目执行结束后，你就可以收到如下这样的邮件：
+
+.. include:: /images/jenkins/groovy邮件模版.png
+

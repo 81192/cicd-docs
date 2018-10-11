@@ -121,6 +121,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#id21">通知</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id22">配置邮件服务器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id23">增强版电子邮件通知</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24">邮件模版编写</a></li>
 </ul>
 </li>
 </ul>
@@ -959,6 +960,19 @@ server {
 </div></blockquote>
 </li>
 </ol>
+</div>
+<div class="section" id="id24">
+<h3>邮件模版编写<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>官方给出的 <a class="reference external" href="https://raw.githubusercontent.com/jenkinsci/email-ext-plugin/master/src/main/resources/hudson/plugins/emailext/templates/groovy-html.template">groovy 模版</a></p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">email-templates</span></code> 文件夹中创建一个文件</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mkdir -p /var/lib/jenkins/email-templates
+cd /var/lib/jenkins/email-templates
+wget https://raw.githubusercontent.com/jenkinsci/email-ext-plugin/master/src/main/resources/hudson/plugins/emailext/templates/groovy-html.template
+</pre></div>
+</div>
+<p>之后你可以根据自己的需要进行定制修改。</p>
+<p>之后在 【系统管理】中选择【系统设置】，下拉到 Extended E-mail Notification，在 Default Content 框内输入 <code class="docutils literal notranslate"><span class="pre">${SCRIPT,</span> <span class="pre">template=&quot;groovy-html.template&quot;}</span></code>。</p>
+<p>当项目执行结束后，你就可以收到如下这样的邮件：</p>
 </div>
 </div>
 </div>
