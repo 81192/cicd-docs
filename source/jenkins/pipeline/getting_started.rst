@@ -1,12 +1,12 @@
 入门
-+++++++++
+"""""""""
 
 Jenkins Pipeline 是一套插件，支持将连续输送 Pipeline 实施和整合到 Jenkins。Pipeline 提供了一组可扩展的工具，用于通过 Pipeline DSL 为代码创建简单到复杂的传送 Pipeline。
 
 本节介绍 Jenkins Pipeline 的一些关键概念，并帮助介绍在运行的 Jenkins 实例中定于和使用 Pipelines 的基础知识。
 
 先决条件
-""""""""""
+''''''''''
 
 要使用 Jenkins Pipeline，您将需要：
 
@@ -14,7 +14,7 @@ Jenkins Pipeline 是一套插件，支持将连续输送 Pipeline 实施和整�
 * Pipeline 插件
 
 Pipeline 定义
-"""""""""""""""""
+'''''''''''''''''
 
 脚本 Pipeline 是用 Groovy 写的。Groovy 语法的相关位将在本文档中根据需要进行介绍，因此，当了解 Groovy 时，不需要使用 Pipeline。
 可以通过以下任一方式创建基本 Pipeline：
@@ -25,7 +25,7 @@ Pipeline 定义
 用任一方法定义 Pipeline 的语法是一样的，但是 Jenkins 支持直接进入 Web UI 的 Pipeline，通常认为最佳实践是在 Jenkinsfile Jenkins 中直接从源代码控制中加载 Pipeline。
 
 在 Web UI 中定义 Pipeline
-"""""""""""""""""""""""""""""
+'''''''''''''''''''''''''''''
 
 要在 Jenkins Web UI 中创建基本 Pipeline，请按照下列步骤操作：
 
@@ -67,7 +67,7 @@ Pipeline 定义
     2. echo 在控制台输出中写入简单的字符串
 
 在 SCM 中定义管道
-"""""""""""""""""""""
+'''''''''''''''''''''
 
 复杂的 Pipeline 难以在 Pipeline 配置页面的文本区域内进行写入和维护。为了使这更容易，Pipeline 也可以在文本编辑器中，并检查源控件，作为 Jenkinsfile，Jenkins 可以通过 Pipeline 脚本从 SCM 选项加载的控件。
 为此，在定义 Pipeline 时，从 SCM 中选择 Pipeline 脚本。
@@ -82,7 +82,7 @@ Pipeline 定义
         #!/usr/bin/env groovy Jenkinsfile
 
 内置文档
-"""""""""""""""""""""
+'''''''''''''''''''''
 
 Pipeline 配有内置的文档功能，可以更轻松地创建不同复杂性的 Pipeline。根据 Jenkins 实例中安装的插件自动生成和更新内置文档。
 内置文档可以在全局范围找到： http://localhost:8080/pipeline-syntax/ 假设你有一个 Jenkins 实例在本地端口 8080 上运行。同样的文档也作为管道语法链接到任何配置的 Pipeline 的侧栏项目中。
@@ -90,7 +90,7 @@ Pipeline 配有内置的文档功能，可以更轻松地创建不同复杂性�
 .. image:: /images/jenkins/pipeline/Pipeline内置文档.png
 
 代码段生成器
-'''''''''''''''''
+^^^^^^^^^^^^^^^^
 
 内置的 “Snippet Generator” 实用程序有助于为单个步骤创建一些代码，发现插件提供的新步骤，或为特定步骤尝试不同的参数。
 
@@ -108,7 +108,7 @@ Snippet Generator 动态填充 Jenkins 实例可用的步骤列表。可用的�
     要访问有关所选步骤的其他信息和/或文档，请单机帮助图标（由上图中的红色箭头指示）
 
 全局变量引用
-''''''''''''''''
+^^^^^^^^^^^^^^^^
 
 处理代码片段生成器之外，Pipelin 还提供了一个内置的”全局变量引用“。像 Snippet Generator 一样，它也是由插件动态填充的，与代码段生成器不同的是，全局变量引用仅包含 Pipeline 提供的变量的文档，这些变量可用于 Pipeline。
 

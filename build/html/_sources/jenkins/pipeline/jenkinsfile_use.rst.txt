@@ -317,3 +317,7 @@ Toggle Scripted Pipeline (Advanced)
             sh 'mvn -B verify'
         }
     }
+
+1. environment 顶级 pipeline 块中使用的指令将适用于 Pipeline 中的所有步骤。
+2. 在一个 environment 意图中定义的一个指令 stage 仅将给定的环境变量应用与该过程中的步骤 stage
+

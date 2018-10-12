@@ -228,13 +228,12 @@ pipeline {
 </div>
 </div>
 </div>
-</div>
 <div class="section" id="id5">
-<h1>入门<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<h2>入门<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>Jenkins Pipeline 是一套插件，支持将连续输送 Pipeline 实施和整合到 Jenkins。Pipeline 提供了一组可扩展的工具，用于通过 Pipeline DSL 为代码创建简单到复杂的传送 Pipeline。</p>
 <p>本节介绍 Jenkins Pipeline 的一些关键概念，并帮助介绍在运行的 Jenkins 实例中定于和使用 Pipelines 的基础知识。</p>
 <div class="section" id="id6">
-<h2>先决条件<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h3>先决条件<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>要使用 Jenkins Pipeline，您将需要：</p>
 <ul class="simple">
 <li>Jenkins 2.x 或更高版本（旧版本回到 1.642.3 可能会工作，但不推荐）</li>
@@ -242,7 +241,7 @@ pipeline {
 </ul>
 </div>
 <div class="section" id="id7">
-<h2>Pipeline 定义<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h3>Pipeline 定义<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>脚本 Pipeline 是用 Groovy 写的。Groovy 语法的相关位将在本文档中根据需要进行介绍，因此，当了解 Groovy 时，不需要使用 Pipeline。
 可以通过以下任一方式创建基本 Pipeline：</p>
 <ul class="simple">
@@ -252,7 +251,7 @@ pipeline {
 <p>用任一方法定义 Pipeline 的语法是一样的，但是 Jenkins 支持直接进入 Web UI 的 Pipeline，通常认为最佳实践是在 Jenkinsfile Jenkins 中直接从源代码控制中加载 Pipeline。</p>
 </div>
 <div class="section" id="web-ui-pipeline">
-<h2>在 Web UI 中定义 Pipeline<a class="headerlink" href="#web-ui-pipeline" title="Permalink to this headline">¶</a></h2>
+<h3>在 Web UI 中定义 Pipeline<a class="headerlink" href="#web-ui-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>要在 Jenkins Web UI 中创建基本 Pipeline，请按照下列步骤操作：</p>
 <ul>
 <li><p class="first">单击 Jenkins 主页上的 New Item</p>
@@ -296,7 +295,7 @@ node {
 </ul>
 </div>
 <div class="section" id="scm">
-<h2>在 SCM 中定义管道<a class="headerlink" href="#scm" title="Permalink to this headline">¶</a></h2>
+<h3>在 SCM 中定义管道<a class="headerlink" href="#scm" title="Permalink to this headline">¶</a></h3>
 <p>复杂的 Pipeline 难以在 Pipeline 配置页面的文本区域内进行写入和维护。为了使这更容易，Pipeline 也可以在文本编辑器中，并检查源控件，作为 Jenkinsfile，Jenkins 可以通过 Pipeline 脚本从 SCM 选项加载的控件。
 为此，在定义 Pipeline 时，从 SCM 中选择 Pipeline 脚本。
 选择 SCM 选项中的 Pipeline 脚本后，不要在 Jenkins UI 中输入任何 Groovy 代码；您只需要制定要从其中检索 Pipeline 的源代码的路径。更新制定的存储库中，只要 Pipeline 配置了 SCM 轮询触发器，就会触发一个新构建。</p>
@@ -309,12 +308,12 @@ node {
 </div>
 </div>
 <div class="section" id="id8">
-<h2>内置文档<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<h3>内置文档<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>Pipeline 配有内置的文档功能，可以更轻松地创建不同复杂性的 Pipeline。根据 Jenkins 实例中安装的插件自动生成和更新内置文档。
 内置文档可以在全局范围找到： <a class="reference external" href="http://localhost:8080/pipeline-syntax/">http://localhost:8080/pipeline-syntax/</a> 假设你有一个 Jenkins 实例在本地端口 8080 上运行。同样的文档也作为管道语法链接到任何配置的 Pipeline 的侧栏项目中。</p>
 <img alt="../../_images/Pipeline内置文档.png" src="../../_images/Pipeline内置文档.png" />
 <div class="section" id="id9">
-<h3>代码段生成器<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h4>代码段生成器<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
 <p>内置的 “Snippet Generator” 实用程序有助于为单个步骤创建一些代码，发现插件提供的新步骤，或为特定步骤尝试不同的参数。</p>
 <p>Snippet Generator 动态填充 Jenkins 实例可用的步骤列表。可用的步骤数量取决于安装的插件，它明确地暴露了在 Pipeline 中使用的步骤。</p>
 <p>要使用代码段生成器生成步骤代码片段：</p>
@@ -334,7 +333,7 @@ node {
 </ol>
 </div>
 <div class="section" id="id10">
-<h3>全局变量引用<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<h4>全局变量引用<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
 <p>处理代码片段生成器之外，Pipelin 还提供了一个内置的”全局变量引用“。像 Snippet Generator 一样，它也是由插件动态填充的，与代码段生成器不同的是，全局变量引用仅包含 Pipeline 提供的变量的文档，这些变量可用于 Pipeline。</p>
 <p>在 Pipeline 中默认提供的变量是：</p>
 <blockquote>
@@ -356,6 +355,7 @@ node {
 </li>
 </ul>
 </div></blockquote>
+</div>
 </div>
 </div>
 <div class="section" id="jenkinsfile">
@@ -640,6 +640,10 @@ node {
 }
 </pre></div>
 </div>
+<ol class="arabic simple">
+<li>environment 顶级 pipeline 块中使用的指令将适用于 Pipeline 中的所有步骤。</li>
+<li>在一个 environment 意图中定义的一个指令 stage 仅将给定的环境变量应用与该过程中的步骤 stage</li>
+</ol>
 </div>
 </div>
 </div>
