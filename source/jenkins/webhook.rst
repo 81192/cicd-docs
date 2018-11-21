@@ -70,3 +70,39 @@ webhook 页面配置钩子；完成后点击 :guilabel:`Add webhook`
 Gitlab webhook
 """"""""""""""""""""
 
+配置 Gitlab hook 插件
+''''''''''''''''''''''''
+
+通常 jenkins 在项目配置时是可以配置远程构建触发器，设置好 jenkins 的回调 url 后就可以让 jenkins 进行自动构建。
+这就需要先下载 Gitlab Hook plugin 插件。登陆 Jenkins，点击 系统管理 -> 插件管理 -> 可选插件，选择安装 :guilabel:`Gitlab Hook Plugin`
+
+当我们创建一个新的项目之后，jenkins gitlab hook plugin 会帮助我们生成一个回调地址。在任务重构建触发器喜爱获取回调 URL。
+
+.. image:: /images/jenkins/jenkins_gitlab_hook_plugin.png
+
+配置 gitlab 项目
+''''''''''''''''''''
+
+登陆 gitlab 项目中，点击项目的 编辑项目（settings），找到 Webhooks 点击进入页面。
+
+.. image:: /images/jenkins/jenkins_gitlab_hook_plugin.png
+
+将 jenkins gitlab hook plugin 生成的回调地址填写到 URL 中。
+添加成功后，点击此 webhook 后面的 test 进行测试。
+
+.. image:: /images/jenkins/jenkins_webhook_test.png
+
+如果返回 ``Hook successfully executed`` 表示配置成功。
+
+.. image:: /images/jenkins/gitlab_webhook_test_state.png
+
+jenkins 权限设置
+''''''''''''''''''''''''
+
+gitlab 的 webhooks url 是根据 jenkins 构建权限连接设置的，
+如果必须登陆才能构建就必须获取jenkins的用户名及 token，可以在 jenkins 用户-设置里面查看到，
+url 格式为： ``http://<username>:<api-token>@<jenkins-server>:<jenkins-port>/``
+
+当在gitlab上测试webhook报错 ``Hook executed successfully but returned HTTP 403``，我们必须进入 jenkins 
+系统设置 -> 全局安全配置（Configure Global Security）中，关闭 :guilabel:`Prevent Cross Site Request Forgery exploits` ，
+然后再点击 gitlab webhooks 测试返回 201 成功。

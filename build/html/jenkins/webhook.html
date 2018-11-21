@@ -84,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../git/git.html">git</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gitlab/gitlab.html">gitlab</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jenkins.html">jenkins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/docker.html">Docker 使用 Pipeline</a></li>
 </ul>
 
             
@@ -199,6 +200,32 @@ github 的 token；到这里我们需要去 Github.com 创建一个 Token 给 Je
 </div>
 <div class="section" id="gitlab-webhook">
 <h2>Gitlab webhook<a class="headerlink" href="#gitlab-webhook" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gitlab-hook">
+<h3>配置 Gitlab hook 插件<a class="headerlink" href="#gitlab-hook" title="Permalink to this headline">¶</a></h3>
+<p>通常 jenkins 在项目配置时是可以配置远程构建触发器，设置好 jenkins 的回调 url 后就可以让 jenkins 进行自动构建。
+这就需要先下载 Gitlab Hook plugin 插件。登陆 Jenkins，点击 系统管理 -&gt; 插件管理 -&gt; 可选插件，选择安装 <span class="guilabel">Gitlab Hook Plugin</span></p>
+<p>当我们创建一个新的项目之后，jenkins gitlab hook plugin 会帮助我们生成一个回调地址。在任务重构建触发器喜爱获取回调 URL。</p>
+<img alt="../_images/jenkins_gitlab_hook_plugin.png" src="../_images/jenkins_gitlab_hook_plugin.png" />
+</div>
+<div class="section" id="gitlab">
+<h3>配置 gitlab 项目<a class="headerlink" href="#gitlab" title="Permalink to this headline">¶</a></h3>
+<p>登陆 gitlab 项目中，点击项目的 编辑项目（settings），找到 Webhooks 点击进入页面。</p>
+<img alt="../_images/jenkins_gitlab_hook_plugin.png" src="../_images/jenkins_gitlab_hook_plugin.png" />
+<p>将 jenkins gitlab hook plugin 生成的回调地址填写到 URL 中。
+添加成功后，点击此 webhook 后面的 test 进行测试。</p>
+<img alt="../_images/jenkins_webhook_test.png" src="../_images/jenkins_webhook_test.png" />
+<p>如果返回 <code class="docutils literal notranslate"><span class="pre">Hook</span> <span class="pre">successfully</span> <span class="pre">executed</span></code> 表示配置成功。</p>
+<img alt="../_images/gitlab_webhook_test_state.png" src="../_images/gitlab_webhook_test_state.png" />
+</div>
+<div class="section" id="jenkins">
+<h3>jenkins 权限设置<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h3>
+<p>gitlab 的 webhooks url 是根据 jenkins 构建权限连接设置的，
+如果必须登陆才能构建就必须获取jenkins的用户名及 token，可以在 jenkins 用户-设置里面查看到，
+url 格式为： <code class="docutils literal notranslate"><span class="pre">http://&lt;username&gt;:&lt;api-token&gt;&#64;&lt;jenkins-server&gt;:&lt;jenkins-port&gt;/</span></code></p>
+<p>当在gitlab上测试webhook报错 <code class="docutils literal notranslate"><span class="pre">Hook</span> <span class="pre">executed</span> <span class="pre">successfully</span> <span class="pre">but</span> <span class="pre">returned</span> <span class="pre">HTTP</span> <span class="pre">403</span></code>，我们必须进入 jenkins
+系统设置 -&gt; 全局安全配置（Configure Global Security）中，关闭 <span class="guilabel">Prevent Cross Site Request Forgery exploits</span> ，
+然后再点击 gitlab webhooks 测试返回 201 成功。</p>
+</div>
 </div>
 </div>
 
